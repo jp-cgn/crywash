@@ -27,16 +27,23 @@ model User {
 
   wallets  Wallet[] // 1:n
   sessions Session[]
+
+  @@index([id])
+  @@index([email])
 }
 
 model Wallet {
   id        String   @id @default(uuid())
+  name      String
   balance   Int      @default(0)
   createdAt DateTime @default(now())
-  status    Int      @default(0)
+  status    Int      @default(0) //status 0 = active
 
   userId String
   User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([userId, status])
 }
 
 model Session {

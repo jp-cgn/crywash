@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 
 import authRoutes from "./routes/auth.routes.js";
+import walletRoutes from "./routes/wallet.routes.js";
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ app.get("/test", (req, res) => {
   res.send({ message: "Verbunden" });
 });
 app.use("/auth", authRoutes);
+app.use("/wallet", walletRoutes);
 
 app.listen(PORT, () => {
   console.log(PORT);

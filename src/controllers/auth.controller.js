@@ -5,8 +5,6 @@ import { createSession } from "../services/session.service.js";
 import { setSessionCookie } from "../utils/cookies.js";
 import { createWallet } from "../services/walletServices/walletCreate.js";
 
-const SESSION_TTL_DAYS = 7;
-
 export const register = async (req, res) => {
   const { name, email, password, username } = req.body;
   if (!name || !email || !password || !username) {
@@ -27,7 +25,7 @@ export const register = async (req, res) => {
       email,
       username,
       password: hashedPassword,
-      wallets: { create: [{ balance: 0 }] },
+      wallets: { create: [{ name: "main", balance: 0 }] },
     },
     select: {
       id: true,
