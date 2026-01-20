@@ -57,7 +57,7 @@ export const getWallets = async (req, res) => {
 };
 
 export const deleteWallet = async (req, res) => {
-  console.log("!");
+  //console.log("!");
   try {
     const userId = req.user.id;
     const { walletId } = req.params;
@@ -68,11 +68,14 @@ export const deleteWallet = async (req, res) => {
       return res.status(400).json({ message: "Wallet-Id wrong" });
     }
 
-    const result = await prisma.wallet.deleteMany({
+    const result = await prisma.wallet.updateMany({
       where: {
         id: walletId,
         userId: userId,
         status: 0,
+      },
+      data: {
+        status: 99,
       },
     });
 

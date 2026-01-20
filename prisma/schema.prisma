@@ -27,9 +27,6 @@ model User {
 
   wallets  Wallet[] // 1:n
   sessions Session[]
-
-  @@index([id])
-  @@index([email])
 }
 
 model Wallet {
@@ -39,8 +36,11 @@ model Wallet {
   createdAt DateTime @default(now())
   status    Int      @default(0) //status 0 = active
 
+  sentTransactions     Transaction[] @relation("FromWallet")
+  receivedTransactions Transaction[] @relation("ToWallet")
+
   userId String
-  User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([userId, status])
@@ -59,4 +59,28 @@ model Session {
 
   @@index([userId])
   @@index([expiresAt])
+}
+
+enum TxType {
+  TRANSFER
+}
+
+model Transaction {
+  id           String @id @default(uuid())
+  fromWalletId String
+  fromWallet   Wallet @relation("FromWallet", fields: [fromWalletId], references: [id], onDelete: Cascade)
+
+  toWalletId String
+  toWallet   Wallet @relation("ToWallet", fields: [toWalletId], references: [id], onDelete: Cascade)
+
+  type      TxType
+  amount    Int
+  note      String?
+  createdAt DateTime @default(now())
+
+  idempotencyKey String? @unique
+
+  @@index([fromWalletId])
+  @@index([toWalletId])
+  @@index([createdAt])
 }
