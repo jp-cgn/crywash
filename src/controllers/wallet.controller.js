@@ -55,3 +55,37 @@ export const getWallets = async (req, res) => {
     return res.status(500).json({ message: "Internal server error" });
   }
 };
+
+export const deleteWallet = async (req, res) => {
+  console.log("!");
+  try {
+    const userId = req.user.id;
+    const { walletId } = req.params;
+    if (!userId) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    if (!walletId) {
+      return res.status(400).json({ message: "Wallet-Id wrong" });
+    }
+
+    const result = await prisma.wallet.deleteMany({
+      where: {
+        id: walletId,
+        userId: userId,
+        status: 0,
+      },
+    });
+
+    if (result.count === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Wallet not found" });
+    }
+    return res.status(200).json({ success: true, message: "Deleted" });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error" });
+  }
+};
