@@ -27,10 +27,11 @@ model User {
 
   wallets  Wallet[] // 1:n
   sessions Session[]
+  notes    Note[]    @relation("NotesCreatedBy")
 }
 
 model Wallet {
-  id        String   @id @default(uuid())
+  id        String   @id @default(uuid()) 
   name      String
   balance   Int      @default(0)
   createdAt DateTime @default(now())
@@ -83,4 +84,29 @@ model Transaction {
   @@index([fromWalletId])
   @@index([toWalletId])
   @@index([createdAt])
+}
+
+enum NoteTargetType {
+  USER
+  WALLET
+  TRANSAKTION
+}
+
+model Note {
+  id         String         @id @default(cuid())
+  targetType NoteTargetType
+  targetId   String // id of noted object (userId, walletId, etc)
+  title      String?
+  body       String
+  isPinned   Boolean        @default(false)
+
+  // Who created the note?
+  createdById String
+  createdBy   User   @relation("NotesCreatedBy", fields: [createdById], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([targetType, targetId])
+  @@index([createdById])
 }
