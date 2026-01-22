@@ -58,8 +58,8 @@ This approach improves security by preventing direct access to the token from cl
 
 | Method | Endpoint            | Description                 |
 | ------ | ------------------- | --------------------------- |
-| POST   | `/wallet`           | Create a new wallet         |
-| GET    | `/wallet`           | Get own wallets (paginated) |
+| POST   | `/wallet/create`           | Create a new wallet         |
+| GET    | `/wallet/getWallets`           | Get own wallets (paginated) |
 | DELETE | `/wallet/:walletId` | Delete own wallet           |
 
 > 🔒 All wallet endpoints require a valid **JWT cookie**.
